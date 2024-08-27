@@ -24,6 +24,9 @@ jobs:
         name: hw-tests.gz
         path: hw-tests
   tests:
+    needs: 
+      - build
+    if: needs.build.result == 'success'
     runs-on: 
       - riscv-builder
       - soc-starfive-jh7100
