@@ -12,6 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: ocaml/setup-ocaml@v2.2.9
+      name: setup-ocaml
     - name: install-dep
       run: opam install herdtools7
     - name: install cross compiler
@@ -40,6 +41,7 @@ jobs:
       - name: run tests
         run: hw-tests/run.sh
       - uses: ocaml/setup-ocaml@v2.2.9
+        name: setup-ocaml
       - name: install-dep
         run: opam install herdtools7
       - name: sum
