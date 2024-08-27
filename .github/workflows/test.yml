@@ -18,7 +18,7 @@ jobs:
     - name: install-dep
       run: opam install herdtools7
     - name: install cross compiler
-      run: apt install gcc-riscv64-linux-gnu
+      run: sudo apt install gcc-riscv64-linux-gnu
     - name: build tests
       run: make hw-tests CORES=$(nproc) GCC=riscv64-linux-gnu-gcc -j$(nproc)
     - name: Upload a Build Artifact
