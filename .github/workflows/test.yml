@@ -12,6 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: ocaml/setup-ocaml@v2.2.9
+      with:
+        ocaml-compiler: 5
       name: setup-ocaml
     - name: install-dep
       run: opam install herdtools7
@@ -38,10 +40,12 @@ jobs:
           name: hw-tests.gz
       - name: extract
         run: tar xf hw-tests.gz
+      - uses: ocaml/setup-ocaml@v2.2.9
+        with:
+          ocaml-compiler: 5
+        name: setup-ocaml
       - name: run tests
         run: hw-tests/run.sh
-      - uses: ocaml/setup-ocaml@v2.2.9
-        name: setup-ocaml
       - name: install-dep
         run: opam install herdtools7
       - name: sum
