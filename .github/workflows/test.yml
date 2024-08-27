@@ -1,0 +1,49 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ocaml/setup-ocaml@v2.2.9
+    - name: install-dep
+      run: opam install herdtools7
+    - name: install cross compiler
+      run: apt install gcc-riscv64-linux-gnu
+    - name: build tests
+      run: make hw-tests CORES=$(nproc) GCC=riscv64-linux-gnu-gcc -j$(nproc)
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.3.6
+      with:
+        name: hw-tests.gz
+        path: hw-tests
+  tests:
+    runs-on: 
+      - riscv-builder
+      - soc-starfive-jh7100
+    steps:
+      - name: Download a Build Artifact
+        with:
+          name: hw-tests.gz
+      - name: extract
+        run: tar xf hw-tests.gz
+      - name: run tests
+        run: hw-tests/run.sh
+      - uses: ocaml/setup-ocaml@v2.2.9
+      - name: install-dep
+        run: opam install herdtools7
+      - name: sum
+        run: |
+          mkdir -p hw-results
+          msum7 hw-tests/run.*.log > hw-results/run.log
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.3.6
+        with:
+          name: result.log
+          path: hw-results/run.log
